@@ -1,4 +1,4 @@
-const {getAll, create, getDataByStatus, deleteData} = require('../model/todoModel');
+const {getAll, create, deleteData} = require('../model/todoModel');
 const { getPostData } = require('../utils');
 
 // GET -> get all the todos
@@ -28,22 +28,10 @@ async function createTodo(req,res){
     }
 }
 
-// GET -> get a todo by status
-async function getTodo(res,status){
-    try {
-        const todo = await getDataByStatus(status);
-        res.writeHead(200,{"Content-Type":"application/json"});
-        res.end(JSON.stringify(todo));
-    } catch (error) {
-        res.writeHead(404,{"Content-Type":"application/json"});
-        res.end(JSON.stringify({message: error}));    
-    }
-}
-
 // DELETE -> remove a todo
-async function deleteTodo(res,id){
+async function deleteTodo(res,item){
     try {
-        const todo = await deleteData(id);
+        const todo = await deleteData(item);
         res.writeHead(200,{"Content-Type":"application/json"});
         res.end(JSON.stringify(todo));
     } catch (error) {
@@ -55,6 +43,5 @@ async function deleteTodo(res,id){
 module.exports = {
     getAllTodos,
     createTodo,
-    getTodo,
     deleteTodo
 }

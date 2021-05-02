@@ -1,9 +1,11 @@
 const http = require('http');
-const {getAllTodos, createTodo, getTodo, deleteTodo} = require('./controller/todoController');
+const {getAllTodos, createTodo, deleteTodo} = require('./controller/todoController');
 
 // Create a server
 const server = http.createServer(function(req,res){
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
     // GET all todos
     if(req.url === "/api/todos" && req.method === "GET") {
         getAllTodos(req,res);
@@ -14,16 +16,11 @@ const server = http.createServer(function(req,res){
         createTodo(req,res);
     }
 
-    // Get a todo by status (completed/pending)
-    else if(req.url.match(/\/api\/todos\/[A-z]/) && req.method === "GET"){
-        const status = req.url.split('/')[3];
-        getTodo(res,status);
-    }
-
-    // DELETE -> delete a todo by id
-    else if(req.url.match(/\/api\/todos\/([0-9A-Za-z]+)/) && req.method === "DELETE"){
-        const id = req.url.split('/')[3];
-        deleteTodo(res,id);
+    // DELETE -> delete a todo by todo name
+    else if(req.url.match(/\/api\/todos\/([A-z]+)/) && req.method === "DELETE"){
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        const todo = req.url.split('/')[3];
+        deleteTodo(res,todo);
     }
 
     else{ 

@@ -1,5 +1,4 @@
 const DataStore = require('nedb');
-const { getPostData } = require('../utils');
 const database = new DataStore("todo.db");
 database.loadDatabase();
 
@@ -21,23 +20,9 @@ function create(todo){
     });
 }
 
-function getDataByStatus(status){
+function deleteData(todo){
     return new Promise(function(resolve,reject){
-        if(status === "completed" || status === "pending"){
-            database.findOne({status: status},function(err,doc){
-                if(err) reject(err);
-                else if(!doc) reject(`No such todo with status: ${status}`);
-                else resolve(doc);
-            });
-        }else{
-            reject("Bad request");
-        }
-    });
-}
-
-function deleteData(id){
-    return new Promise(function(resolve,reject){
-        database.remove({_id:id},{},function(err,numDeleted){
+        database.remove({todo:todo},{},function(err,numDeleted){
             if(err) reject(err);
             else if(numDeleted === 0) reject("No such todo!");
             else resolve("Todo deleted successfully");
@@ -48,6 +33,5 @@ function deleteData(id){
 module.exports = {
     getAll,
     create,
-    getDataByStatus,
     deleteData
 }
